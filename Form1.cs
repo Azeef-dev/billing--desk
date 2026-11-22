@@ -90,7 +90,7 @@ namespace billing_desk
             txtSearch.TextChanged += TxtSearch_TextChanged;
             this.Controls.Add(txtSearch);
 
-            // Search Results Grid (Dropdown style)
+            // Search Results Grid
             dgvSearch = new DataGridView { Location = new Point(355, 120), Size = new Size(360, 90), Visible = false, BackgroundColor = Color.White, AllowUserToAddRows = false, ReadOnly = true, SelectionMode = DataGridViewSelectionMode.FullRowSelect, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill };
             dgvSearch.Columns.Add("Barcode", "Barcode");
             dgvSearch.Columns.Add("Name", "Name");
@@ -99,7 +99,7 @@ namespace billing_desk
             this.Controls.Add(dgvSearch);
             dgvSearch.BringToFront();
 
-            // Cart Table (Grid)
+            // Cart Table
             dgvCart = new DataGridView { Location = new Point(20, 130), Size = new Size(735, 385), BackgroundColor = Color.White, AllowUserToAddRows = false, ReadOnly = true, SelectionMode = DataGridViewSelectionMode.FullRowSelect, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill };
             dgvCart.Columns.Add("Barcode", "Barcode");
             dgvCart.Columns.Add("Name", "Item Name");
@@ -136,11 +136,11 @@ namespace billing_desk
 
             this.Controls.Add(pnlBill);
 
-            // Right Side Receipt Preview & Print Setup
+            // Right Side Receipt Preview
             Label lblRecTitle = new Label { Text = "Thermal Receipt Preview & Hard Copy:", Location = new Point(770, 65), Font = new Font("Segoe UI", 9, FontStyle.Bold), AutoSize = true };
             this.Controls.Add(lblRecTitle);
 
-            rtbReceipt = new RichTextBox { Location = new Point(770, 85), Size = new Size(440, 520), Font = new Font("Consolas", 10), ReadOnly = true, BackColor = Color.White };
+            rtbReceipt = new RichTextBox { Location = new Point(770, 85), Size = new Size(440, 520), Font = new Font("Consolas", 9.5f), ReadOnly = true, BackColor = Color.White };
             this.Controls.Add(rtbReceipt);
 
             Button btnPrintReceipt = new Button { Text = "Print Hard Copy (Thermal Printer)", Location = new Point(770, 615), Size = new Size(440, 40), BackColor = Color.FromArgb(41, 128, 185), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
@@ -286,7 +286,7 @@ namespace billing_desk
             if (decimal.TryParse(lblGrandTotal.Text, out decimal total) && decimal.TryParse(txtCash.Text, out decimal cash))
             {
                 decimal change = cash - total;
-                lblChange.Text = "Change: " + (change >= 0 ? change.ToString("0.00") : "0.00");
+                lblChange.Text = "Change: " + (change >= 0 ? change.ToString("0.00" ) : "0.00");
             }
         }
 
@@ -325,29 +325,44 @@ namespace billing_desk
         private void GenerateReceipt(decimal total)
         {
             rtbReceipt.Clear();
-            rtbReceipt.AppendText("================================================\n");
-            rtbReceipt.AppendText("              GIANT SUPER MARKET                \n");
-            rtbReceipt.AppendText("         Main Branch - Cash Counter #01         \n");
-            rtbReceipt.AppendText("================================================\n");
-            rtbReceipt.AppendText($"Date: {DateTime.Now}\n");
+            rtbReceipt.AppendText("                GIANT SUPER MARKET              \n");
+            rtbReceipt.AppendText("            Main Shahrah-e-Faisal, Karachi      \n");
+            rtbReceipt.AppendText("              NTN: 1234567-8 | STRN: 01        \n");
             rtbReceipt.AppendText("------------------------------------------------\n");
-            rtbReceipt.AppendText("Item Description        Qty    Price     Total  \n");
+            rtbReceipt.AppendText($" Invoice #: INV-{DateTime.Now.ToString("yyyyMMddHHmmss")}\n");
+            rtbReceipt.AppendText($" Date    : {DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss tt")}\n");
+            rtbReceipt.AppendText(" Cashier : Admin (Counter # 01)\n");
+            rtbReceipt.AppendText("------------------------------------------------\n");
+            rtbReceipt.AppendText(String.Format("{0,-20} {1,4} {2,8} {3,9}\n", "Item Description", "Qty", "Price", "Total"));
             rtbReceipt.AppendText("------------------------------------------------\n");
 
             foreach (DataGridViewRow row in dgvCart.Rows)
             {
                 string name = row.Cells["Name"].Value.ToString();
-                if (name.Length > 20) name = name.Substring(0, 20);
-                rtbReceipt.AppendText(String.Format("{0,-22} {1,-5} {2,-9} {3}\n", name, row.Cells["Qty"].Value, row.Cells["Price"].Value, row.Cells["Total"].Value));
+                if (name.Length > 19) name = name.Substring(0, 19);
+                string price = Convert.ToDecimal(row.Cells["Price"].Value).ToString("0.00");
+                string rowTotal = Convert.ToDecimal(row.Cells["Total"].Value).ToString("0.00");
+                string qty = row.Cells["Qty"].Value.ToString();
+
+                rtbReceipt.AppendText(String.Format("{0,-20} {1,4} {2,8} {3,9}\n", name, qty, price, rowTotal));
             }
 
+            decimal cashPaid = 0;
+            decimal.TryParse(txtCash.Text, out cashPaid);
+            decimal changeReturn = cashPaid - total;
+            if (changeReturn < 0) changeReturn = 0;
+
             rtbReceipt.AppendText("------------------------------------------------\n");
-            rtbReceipt.AppendText(String.Format("GRAND TOTAL:                   PKR {0:0.00}\n", total));
-            rtbReceipt.AppendText(String.Format("CASH PAID:                     PKR {0:0.00}\n", string.IsNullOrEmpty(txtCash.Text) ? "0" : txtCash.Text));
-            rtbReceipt.AppendText(String.Format("CHANGE RETURN:                 {0}\n", lblChange.Text));
+            rtbReceipt.AppendText(String.Format(" SUB TOTAL:                      PKR {0,10:0.00}\n", total));
+            rtbReceipt.AppendText(String.Format(" DISCOUNT:                       PKR {0,10:0.00}\n", 0.00));
+            rtbReceipt.AppendText(String.Format(" NET TOTAL:                      PKR {0,10:0.00}\n", total));
+            rtbReceipt.AppendText(String.Format(" CASH PAID:                      PKR {0,10:0.00}\n", cashPaid));
+            rtbReceipt.AppendText(String.Format(" CHANGE DUE:                     PKR {0,10:0.00}\n", changeReturn));
+            rtbReceipt.AppendText("------------------------------------------------\n");
+            rtbReceipt.AppendText("       Thank you for shopping at Giant Mart!    \n");
+            rtbReceipt.AppendText("          Goods once sold will not be           \n");
+            rtbReceipt.AppendText("          exchanged without receipt.            \n");
             rtbReceipt.AppendText("================================================\n");
-            rtbReceipt.AppendText("         Thanks for shopping with us!           \n");
-            rtbReceipt.AppendText("      Software by Giant Enterprise Solutions    \n");
         }
 
         private void PrintThermalReceipt()
@@ -385,4 +400,4 @@ namespace billing_desk
             txtBarcode.Focus();
         }
     }
-}   
+}
