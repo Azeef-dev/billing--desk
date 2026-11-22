@@ -1,0 +1,16 @@
+D:\billing-desk\bin\Debug\net11.0\billing-desk.exe
+D:\billing-desk\bin\Debug\net11.0\billing-desk.deps.json
+D:\billing-desk\bin\Debug\net11.0\billing-desk.runtimeconfig.json
+D:\billing-desk\bin\Debug\net11.0\billing-desk.runtimeconfig.dev.json
+D:\billing-desk\bin\Debug\net11.0\billing-desk.dll
+D:\billing-desk\bin\Debug\net11.0\billing-desk.pdb
+D:\billing-desk\obj\Debug\net11.0\billing-desk.GeneratedMSBuildEditorConfig.editorconfig
+D:\billing-desk\obj\Debug\net11.0\billing-desk.AssemblyInfoInputs.cache
+D:\billing-desk\obj\Debug\net11.0\billing-desk.AssemblyInfo.cs
+D:\billing-desk\obj\Debug\net11.0\billing-desk.csproj.CoreCompileInputs.cache
+D:\billing-desk\obj\Debug\net11.0\billing-desk.dll
+D:\billing-desk\obj\Debug\net11.0\refint\billing-desk.dll
+D:\billing-desk\obj\Debug\net11.0\billing-desk.pdb
+D:\billing-desk\obj\Debug\net11.0\billing-desk.genruntimeconfig.cache
+D:\billing-desk\obj\Debug\net11.0\ref\billing-desk.dll
+D:\billing-desk\obj\Debug\net11.0\billing-.B2FEE224.Up2Date
