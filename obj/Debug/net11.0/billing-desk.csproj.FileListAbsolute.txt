@@ -14,3 +14,4 @@ D:\billing-desk\obj\Debug\net11.0\billing-desk.pdb
 D:\billing-desk\obj\Debug\net11.0\billing-desk.genruntimeconfig.cache
 D:\billing-desk\obj\Debug\net11.0\ref\billing-desk.dll
 D:\billing-desk\obj\Debug\net11.0\billing-.B2FEE224.Up2Date
+D:\billing-desk\obj\Debug\net11.0\billing-desk.sourcelink.json
