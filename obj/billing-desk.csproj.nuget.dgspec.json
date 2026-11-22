@@ -45,6 +45,12 @@
         "net11.0-windows": {
           "framework": "net11.0-windows7.0",
           "targetAlias": "net11.0-windows",
+          "dependencies": {
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
